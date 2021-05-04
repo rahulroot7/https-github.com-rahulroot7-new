@@ -1,0 +1,70 @@
+public function ecosystem_data(){
+		
+
+
+		//validate the form data 
+
+		$this->form_validation->set_rules('first_pic_title', 'First Picture Title', 'required');
+		$this->form_validation->set_rules('second_pic_title', 'Second Picture Title', 'required');
+		$this->form_validation->set_rules('third_pic_title', 'Third Picture Title', 'required');
+		$this->form_validation->set_rules('fourth_pic_title', 'Fourth Picture Title', 'required');
+
+        if ($this->form_validation->run() == FALSE){
+			$this->load->view('admin/setting_data');
+
+		}else{
+			
+			//get the form values
+			$data['first_pic_title'] = $this->input->post('first_pic_title', TRUE);
+			$data['second_pic_title'] = $this->input->post('second_pic_title', TRUE);
+			$data['third_pic_title'] = $this->input->post('third_pic_title', TRUE);
+			$data['fourth_pic_title'] = $this->input->post('fourth_pic_title', TRUE);
+			
+
+			//file upload code 
+			//set file upload settings 
+			$config['upload_path']          = APPPATH. '../assests/uploads/';
+			$config['allowed_types']        = 'gif|jpg|png';
+			$config['max_size']             = 1024;
+
+				$this->load->library('upload', $config);
+
+				if (!empty($_FILES['first_pic_file']['name'])) {
+					$this->upload->do_upload('first_pic_file');
+					$fileData = $this->upload->data();
+			        $data['first_pic_file'] = $fileData['file_name'];
+					
+					}else{
+						$data['first_pic_file'] = $this->input->post('first_old', TRUE);
+					}
+				if (!empty($_FILES['second_pic_file']['name'])) {
+					$this->upload->do_upload('second_pic_file');
+					$fileData = $this->upload->data();
+			        $data['second_pic_file'] = $fileData['file_name'];
+					
+					}else{
+						$data['second_pic_file'] = $this->input->post('second_old', TRUE);
+					}
+				if (!empty($_FILES['third_pic_file']['name'])) {
+					$this->upload->do_upload('third_pic_file');
+					$fileData = $this->upload->data();
+			        $data['third_pic_file'] = $fileData['file_name'];
+					
+					}else{
+						$data['third_pic_file'] = $this->input->post('third_old', TRUE);
+					}
+				if (!empty($_FILES['fourth_pic_file']['name'])) {
+					$this->upload->do_upload('fourth_pic_file');
+					$fileData = $this->upload->data();
+			        $data['fourth_pic_file'] = $fileData['file_name'];
+					
+					}else{
+						$data['fourth_pic_file'] = $this->input->post('fourth_old', TRUE);
+					}			
+			//   echo "<pre>";
+			// print_r($data); die;
+			  $this->Update_model->store_ecosystem_data($data);;
+			  	redirect('admin/Setting');
+						// $this->load->view('footer');
+			}
+		}
